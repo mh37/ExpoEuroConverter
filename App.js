@@ -2,24 +2,33 @@ import React, { useState } from 'react';
 import {Picker} from '@react-native-picker/picker';
 import { Alert, StyleSheet, Text, View, Button, TextInput, StatusBar, Image } from 'react-native';
 
-//API KEY: OSWsYLQTEFPcbGYtTcYTXHZSeZLn8ktU
-// http://api.exchangeratesapi.io/latest?access_key=your_key
 
 export default function App() {
 
   const [selectedCCY, setSelectedCCY] = useState();
 
   const [ccyAmt, setCCYamt] = useState('');
-  const [recipes, setRecipes] = useState([]);
+  const [ccyList, setCCYlist] = useState([]);
  
   const convertCCY = () => {
-    fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ccyAmt}`)
-    .then(response => response.json())
-    .then(responseJson => setRecipes(responseJson.meals))
-    .catch(error => { 
-        Alert.alert('Error', error); 
-    });    
+
+    //set request headers
+    myHeaders = new Headers();
+    myHeaders.append("apikey", "rqxqqVwqu7w80WbugrWDosNnvxGOuRRb");
+    //set request options
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+      headers: myHeaders
+    };
+  
+    fetch("https://api.apilayer.com/exchangerates_data/symbols", requestOptions)
+      .then(response => response.text())
+      .then(result => setCCYlist(result.symbols))
+      .catch(error => console.log('error', error));
   }
+
+
 
   return (
     <View style={styles.container}>
