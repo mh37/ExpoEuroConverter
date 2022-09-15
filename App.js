@@ -8,7 +8,7 @@ export default function App() {
   const [selectedCCY, setSelectedCCY] = useState();
 
   const [ccyAmt, setCCYamt] = useState('');
-  const [ccyList, setCCYlist] = useState([]);
+  const [ccyList, setCCYlist] = useState({});
  
   const convertCCY = () => {
 
@@ -25,7 +25,7 @@ export default function App() {
     fetch("https://api.apilayer.com/exchangerates_data/symbols", requestOptions)
       .then(response => response.text())
       .then(result => setCCYlist(result.symbols))
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error)); 
   }
 
 
@@ -36,12 +36,12 @@ export default function App() {
       <TextInput style={styles.textInput} placeholder='0.00' 
         onChangeText={text => setCCYamt(text)} />
       <Picker
-        selectedValue={selectedCCY}
-        onValueChange={(itemValue, itemIndex) =>
-          setSelectedCCY(itemValue)
-        }>
-        <Picker.Item label="Java" value="java" />
-        <Picker.Item label="JavaScript" value="js" />
+        mode="dropdown"
+        selectedValue={this.state.selected}
+        onValueChange={()=>{}}>
+        {Object.keys(ccyList).map((key) => {
+            return (<Picker.Item label={this.props.ccyList[key]} value={key} key={key}/>) 
+        })}
       </Picker>
 
       <Button title="Convert" onPress={convertCCY
