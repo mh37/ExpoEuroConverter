@@ -1,50 +1,46 @@
 import React, { useState } from 'react';
-import {Picker} from '@react-native-picker/picker';
-import { Alert, StyleSheet, Text, View, Button, TextInput, StatusBar, Image } from 'react-native';
-
+import { Alert, StyleSheet, Text, View, Button, TextInput, FlatList, StatusBar, Image } from 'react-native';
 
 export default function App() {
-
-  const [selectedCCY, setSelectedCCY] = useState();
-
-  const [ccyAmt, setCCYamt] = useState('');
-  const [ccyList, setCCYlist] = useState({});
+  const [keyword, setKeyword] = useState('');
+  const [currencies, setRecipes] = useState([]);
  
-  const convertCCY = () => {
-
-    //set request headers
-    myHeaders = new Headers();
+  const getRecipes = () => {
+    let myHeaders = new Headers();
     myHeaders.append("apikey", "rqxqqVwqu7w80WbugrWDosNnvxGOuRRb");
-    //set request options
-    var requestOptions = {
+    let requestOptions = {
       method: 'GET',
       redirect: 'follow',
       headers: myHeaders
     };
-  
+
     fetch("https://api.apilayer.com/exchangerates_data/symbols", requestOptions)
-      .then(response => response.text())
-      .then(result => setCCYlist(result.symbols))
-      .catch(error => console.log('error', error)); 
+    .then(response => response.json())
+    .then(responseJson => setRecipes(responseJson))
+    .catch(error => { 
+        Alert.alert('Error', error); 
+    });    
+    console.log(JSON.stringify(currencies.symbols));
   }
-
-
+  
+  const listSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "80%",
+          backgroundColor: "gray"
+        }}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar hidden={true} /> 
-      <TextInput style={styles.textInput} placeholder='0.00' 
-        onChangeText={text => setCCYamt(text)} />
-      <Picker
-        mode="dropdown"
-        selectedValue={this.state.selected}
-        onValueChange={()=>{}}>
-        {Object.keys(ccyList).map((key) => {
-            return (<Picker.Item label={this.props.ccyList[key]} value={key} key={key}/>) 
-        })}
-      </Picker>
-
-      <Button title="Convert" onPress={convertCCY
+      <StatusBar hidden={true} />
+      <TextInput style={styles.textInput} placeholder='keyword' 
+        onChangeText={text => setKeyword(text)} />
+      <Button title="Find" onPress={getRecipes
   } />
     </View>
   );
