@@ -7,7 +7,7 @@ export default function App() {
  
   const getRecipes = () => {
     let myHeaders = new Headers();
-    myHeaders.append("apikey", "rqxqqVwqu7w80WbugrWDosNnvxGOuRRb");
+    myHeaders.append("apikey", "APIKEY");
     let requestOptions = {
       method: 'GET',
       redirect: 'follow',
